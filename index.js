@@ -20,6 +20,7 @@ const fs = require('fs')
 async function crawl() {
   const jar = request.jar()
   const regular = await getRegulerSchedule(jar)
+  return regular
 }
 
 function getDarkSchedule(elm) {
@@ -89,6 +90,7 @@ async function getRegulerSchedule(jar) {
 async function start(){
   console.log("Start...");
   const details = await crawl()
+  console.log(details);
   console.log("done");
 }
 
