@@ -23,6 +23,40 @@ async function crawl() {
   // console.log(regular);
 }
 
+function getDarkSchedule(elm) {
+  let arr = []
+  let $ = cheerio.load(elm)
+  elm.map((idx,elm) => {
+    let obj = {}
+     let td = $(elm).find('td')
+     let title = td[0]
+     title = $(title).text()
+     let watch = td[1]
+     watch = $(watch).text().split(' ')
+     watch.pop()
+     obj[title] = watch
+     arr.push(obj)
+  })
+  return arr
+}
+
+function getLightSchedule(elm) {
+  let arr = []
+  let $ = cheerio.load(elm)
+  elm.map((idx,elm) => {
+    let obj = {}
+     let td = $(elm).find('td')
+     let title = td[0]
+     title = $(title).text()
+     let watch = td[1]
+     watch = $(watch).text().split(' ')
+     watch.pop()
+     obj[title] = watch
+     arr.push(obj)
+  })
+  return arr
+}
+
 async function getRegulerSchedule(jar) {
   const URL = [
     'https://www.21cineplex.com/theater/bioskop-baywalk-pluit-xxi,343,JKTBAPL.htm',
@@ -35,48 +69,22 @@ async function getRegulerSchedule(jar) {
 
   let schedule = {}
   let arr = []
-  let obj = {}
-
     for(let i=0, n=URL.length;i<n;i++){
-    obj = {}
     const response = (await get(URL[i],{jar})).body
     let $ = cheerio.load(response)
     //get normal schedule
     let table = $('.table-theater-det')[0]
     const dark = $(table).find('.dark')
     const light = $(table).find('.light')
-
-      dark.map((idx,elm) => {
-       obj = {}
-       let td = $(elm).find('td')
-       let title = td[0]
-       title = $(title).text()
-       let watch = td[1]
-       watch = $(watch).text().split(' ')
-       watch.pop()
-       obj[title] = watch
-       arr.push(obj)
-    })
-
-
-      light.map(async (idx,elm) => {
-       obj = {}
-       let td = $(elm).find('td')
-       let title = td[0]
-       title = $(title).text()
-       let watch = td[1]
-       watch = $(watch).text().split(' ')
-       watch.pop()
-       obj[title] = watch
-       arr.push(obj)
-    })
+    let temp =await getDarkSchedule(dark)
+    let temp2 = await getLightSchedule(light)
 
     const start = URL[i].indexOf('bioskop')
     const end = URL[i].indexOf('-',start)
     const bioskop = URL[i].substr(start+8,end-start)
-    console.log(arr);
-    schedule[bioskop] = arr
+    schedule[bioskop] = temp.concat(temp2)
   }
+  console.log(schedule);
   return schedule
 }
 
