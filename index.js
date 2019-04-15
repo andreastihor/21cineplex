@@ -3,8 +3,8 @@ const service = require('./service.js')
 
 // Create a server with a host and port
 const server=Hapi.server({
-    host:'localhost',
-    port:8000
+    host:'0.0.0.0',
+    port:8132
 });
 
 // Add the route

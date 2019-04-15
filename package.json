@@ -12,6 +12,7 @@
   "dependencies": {
     "bluebird": "^3.5.3",
     "cheerio": "^1.0.0-rc.2",
+    "hapi": "^18.1.0",
     "nodemon": "^1.18.10",
     "request": "^2.88.0"
   }
