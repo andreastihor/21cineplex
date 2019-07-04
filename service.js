@@ -16,10 +16,8 @@ const get = Promise.promisify(request.get)
 const post = Promise.promisify(request.post)
 
 
-
-
-
-async function crawl() {
+async function GetAllSchedule() {
+  console.log("Start...");
   const jar = request.jar()
   const regular = await getRegulerSchedule(jar)
   return regular
@@ -86,17 +84,28 @@ async function getRegulerSchedule(jar) {
     let temp2 = await parseLightSchedule(light)
 
     const start = URL[i].indexOf('bioskop')
-    const end = URL[i].indexOf('-',start)
-    const bioskop = URL[i].substr(start+8,end-start)
+    const end = URL[i].indexOf("-",start+8)
+    let bioskop = URL[i].substr(start+7,end-start).replace(/-/g,' ').trim()
+    bioskop = fixName(bioskop)
     schedule[bioskop] = temp.concat(temp2)
   }
   console.log("Done Crawling");
   return schedule
 }
 
-async function start(){
-  console.log("Start...");
-  return await crawl()
+function fixName(bioskop) {
+  if (bioskop === "pluit juncti") {
+    bioskop = bioskop+'on'
+  }
+  if (bioskop === "puri xxi,15") {
+    bioskop = "puri"
+  }
+  if (bioskop === "taman anggre") {
+    bioskop+='k'
+  }
+  return bioskop
 }
 
-module.exports = start
+
+
+module.exports = {GetAllSchedule}
