@@ -1,11 +1,18 @@
 const Hapi=require('hapi');
-const {GetAllSchedule, } = require('./service.js')
-let constant = require('./constant')
+const handleLineEvent = require('./handler')
+const lineService = require('./lineService')
 // Create a server with a host and port
 const server=Hapi.server({
     host:'localhost',
     port:8132
 });
+
+function handleEvent(event) {
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    return Promise.resolve(null);
+  }
+  return handleLineEvent(event)
+}
 //
 // // Add the route
 // server.route({
@@ -34,14 +41,23 @@ server.route({
   }
 })
 
+
+server.route({
+  path : "/",
+  method : "POST",
+  handler : (req,res) => {
+    return req.payload.events.map(event => {
+       return handleEvent(event);
+     });
+  }
+})
+
 // Start the server
 const start =  async function() {
 
     try {
         await server.start();
-        const response = await GetAllSchedule()
-        constant = response
-    }
+      }
     catch (err) {
         console.log(err);
         process.exit(1);
@@ -50,8 +66,7 @@ const start =  async function() {
     console.log('Server running at:', server.info.uri);
 };
 
-start();
-setInterval(async function()
-{  const response = await GetAllSchedule()
-  constant = response
-}, 86400000 )
+(async function() {
+  await start();
+  await lineService.resetMovie()
+})()
