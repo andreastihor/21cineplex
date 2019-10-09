@@ -4,7 +4,9 @@ module.exports = [
     method: 'get',
     path: '/',
     config: {
-      handler : controller.test,
+      handler : (req,h) => {
+        return "test complete"
+      },
       // validate : {
       //   payload: {
       //   },
