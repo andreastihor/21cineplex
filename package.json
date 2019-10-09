@@ -11,11 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@line/bot-sdk": "^6.8.0",
-    "bluebird": "^3.5.3",
-    "cheerio": "^1.0.0-rc.2",
     "hapi": "^18.1.0",
     "nodemon": "^1.18.10",
-    "puppeteer": "^1.20.0",
-    "request": "^2.88.0"
+    "puppeteer": "^1.20.0"
   }
 }
