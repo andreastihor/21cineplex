@@ -1,4 +1,5 @@
-const controller = require('../controller/service')
+const Joi = require('joi');
+const controller = require('../controller/report')
 module.exports = [
   {
     method: 'get',
@@ -11,6 +12,27 @@ module.exports = [
       //   payload: {
       //   },
     },
+    },
+
+    {
+      method: 'GET',
+      path: "/region",
+      config: {
+        handler : controller.getRegion,
+
+      },
+    },
+    {
+      method: 'GET',
+      path: "/cinema",
+      config: {
+        handler : controller.getCinemaList,
+        validate : {
+          query: {
+            region : Joi.string().required(),
+          },
+        }
+      },
     },
 
 ]
