@@ -21,6 +21,15 @@ module.exports.getCinemaList = async (req,h) => {
   }
   const regionLink = constants.regions[region]
   const response = await service.getCinemaList(regionLink)
-  constants.cinemas[region] = response
+  constants.cinemas = response
   return Object.keys(response)
+}
+
+module.exports.getMovieList = async (req,h) => {
+  const {cinema} = req.query
+  if(Object.keys(constants.cinemas).length === 0) {
+    return "Please Choose Region First"
+  }
+  const cinemaLink = constants.cinemas[cinema]
+  return await(service.getMovieList(cinemaLink))
 }

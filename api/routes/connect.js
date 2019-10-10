@@ -34,5 +34,17 @@ module.exports = [
         }
       },
     },
+    {
+      method: 'GET',
+      path: "/movie",
+      config: {
+        handler : controller.getMovieList,
+        validate : {
+          query: {
+            cinema : Joi.string().required(),
+          },
+        }
+      },
+    },
 
 ]

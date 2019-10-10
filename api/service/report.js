@@ -43,3 +43,30 @@ module.exports.getCinemaList = async (regionLink) => {
   })
   return cinemas
 }
+
+
+module.exports.getMovieList = async (cinemaLink) => {
+  const response = await get(cinemaLink)
+  const $ = cheerio.load(response.body)
+  const movieList = []
+  const movie = {}
+  const $movieList = $('.list-movie')
+  const watch = []
+  $($movieList).each((idx,val) => {
+    let movie = ($(val).find('.list-movie-detail h3'))[0]
+    movie["title"] = $(movie).text()
+    $(val).find('.time-cinema-theater li').each((idx, val) => {
+      watch.push($(val).text())
+    })
+    movie["watch"] = watch
+    let $duration = $(val).find('.list-movie-poster p')[0]
+    movie["duration"] = $($duration).text()
+    movieList.push({
+      title : movie.title,
+      watch : movie.watch,
+      duration : movie.duration
+    })
+  })
+
+  return movieList
+}
